@@ -1,10 +1,9 @@
 #include<stdio.h>
-#include<iostream>
 #include<vector>
+#include<iostream>
 #include<algorithm>
 
-int len, len1, len2;
-int lcs[101][101];
+int len, len1, len2, lcs[101][101];
 char data[101];
 std::string input1, input2;
 std::vector<std::string> output;
@@ -22,15 +21,16 @@ void printAll(int index1, int index2, int currlcs)
     if(index1==len1 || index2==len2)
         return;
 
-    for(k='A'; k<='Z'; ++k)
-        for(i=index1; i<len1; ++i)
-            if(k == input1[i])
-                for(j=index2; j<len2; ++j)
-                    if(k==input2[j] && lcs[i+1][j+1] == currlcs+1)
-                    {
-                        data[currlcs] = k;
-                        printAll(i+1, j+1, currlcs+1);
-                    }
+    for(i=index1; i<len1; ++i)
+    {
+        k = input1[i];
+        for(j=index2; j<len2; ++j)
+            if(k == input2[j] && lcs[i+1][j+1] == currlcs + 1)
+            {
+                data[currlcs] = k;
+                printAll(i+1, j+1, currlcs+1);
+            }
+    }
 }
 
 int main()
@@ -55,7 +55,6 @@ int main()
                 else
                     lcs[i][j] = lcs[i][j-1];
             }
-
     printf("%d ", len = lcs[len1][len2]);
     printAll(0, 0, 0);
     len = output.size();
