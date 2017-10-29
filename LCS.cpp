@@ -1,12 +1,12 @@
 #include<stdio.h>
+#include<string.h>
 #include<vector>
-#include<iostream>
 #include<algorithm>
 
 int len, len1, len2, lcs[101][101];
 char data[101];
-std::string input1, input2;
-std::vector<std::string> output;
+char input1[101], input2[101];
+std::vector<char*> output;
 
 void printAll(int index1, int index2, int currlcs)
 {
@@ -15,7 +15,9 @@ void printAll(int index1, int index2, int currlcs)
     if(currlcs == len)
     {
         data[currlcs] = '\0';
-        output.push_back(data);
+        char* tmp = (char*)malloc(sizeof(char)*(currlcs + 1));
+        strcpy(tmp, data);
+        output.push_back(tmp);
         return;
     }
     if(index1==len1 || index2==len2)
@@ -33,13 +35,19 @@ void printAll(int index1, int index2, int currlcs)
     }
 }
 
+bool forstringsort(char* s1,char* s2)
+{
+    return strcmp(s1, s2) < 0;
+}
+
 int main()
 {
     int i,j;
-    getline(std::cin, input1);
-    getline(std::cin, input2);
-    len1 = input1.length();
-    len2 = input2.length();
+    scanf("%s", &input1);
+    scanf("%s", &input2);
+    len1 = strlen(input1);
+    len2 = strlen(input2);
+
     for(i=0; i<=len1; ++i)
         lcs[i][0] = 0;
     for(i=0; i<=len2; ++i)
@@ -59,8 +67,8 @@ int main()
     printAll(0, 0, 0);
     len = output.size();
     printf("%d\n", len);
-    std::sort(output.begin(), output.end());
+    std::sort(output.begin(), output.end(), forstringsort);
     for(i=0; i<len; ++i)
-        std::cout << output[i] << std::endl;
+        printf("%s\n", output[i]);
     return 0;
 }
