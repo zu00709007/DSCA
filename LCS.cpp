@@ -43,8 +43,8 @@ bool forstringsort(char* s1,char* s2)
 int main()
 {
     int i,j;
-    scanf("%s", &input1);
-    scanf("%s", &input2);
+    scanf("%s", input1);
+    scanf("%s", input2);
     len1 = strlen(input1);
     len2 = strlen(input2);
 
