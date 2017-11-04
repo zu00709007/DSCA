@@ -2,6 +2,7 @@
 #include<math.h>
 #include<limits.h>
 #include<algorithm>
+#define FIST_MAGIC ((((65536.0 * 65536.0 * 16)+(65536.0 * 0.5))* 65536.0))
 
 struct linear
 {
@@ -52,6 +53,12 @@ int intersect2(struct linear* p1, struct linear* p2, float* tmp, float* tmp2)
         return 1;
     else
         return 0;
+}
+
+int QuickFist(float inval)
+{
+    double dtemp = FIST_MAGIC + inval;
+    return ((*(int*)&dtemp) - 0x80000000);
 }
 
 int main()
@@ -224,10 +231,7 @@ int main()
             {
                 if(0 >= alpha_m1 * alpha_m2)
                 {
-                    if(0 <= alpha)
-                        printf("%d\n", (int)(alpha + 0.5));
-                    if(0 > alpha)
-                        printf("%d\n", (int)(alpha - 0.5));
+                    printf("%d\n", QuickFist(alpha));
                     return 0;
                 }
                 else if(0 < alpha_m1)
@@ -295,7 +299,7 @@ int main()
         k = neg;
         while(-1 < k)
         {
-            if((int)(inter_x[i] * data[k].x + inter_y[i] * data[k].y) > data[k].c)
+            if(QuickFist(inter_x[i] * data[k].x + inter_y[i] * data[k].y) > data[k].c)
                 goto out;
             k = data[k].next;
         }
@@ -307,11 +311,6 @@ out:
     if(INFINITY == min_y)
         printf("NA\n");
     else
-    {
-        if(0 <= min_y)
-            printf("%d\n", (int)(min_y + 0.5));
-        if(0 > min_y)
-            printf("%d\n", (int)(min_y - 0.5));
-    }
+        printf("%d\n", QuickFist(min_y));
     return 0;
 }
