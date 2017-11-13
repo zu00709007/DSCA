@@ -79,6 +79,7 @@ int main()
 
     // split the data into positive and negative
 	float xl = -INFINITY, xr = INFINITY;
+	tmp = 0;
     for(i=0; i<line; ++i)
     {
         if(0 > data[i].y)
@@ -100,11 +101,13 @@ int main()
 		else
 		{
 			if(0 < data[i].x && data[i].x < xr)
-				xr = data[i].x;
+				xr = (float)data[i].c / data[i].x;
 			else if(data[i].x > xl)
-				xl = data[i].c * -1;
+				xl = (float)data[i].c / data[i].x;
+			++tmp;
 		}
     }
+	line -= (int)tmp;
     // start Megiddo Algorithm, prune the line into 3    
     while(3 < line)
     {
@@ -263,11 +266,10 @@ int main()
     i = neg;
     while(-1 < i && -1 < data[i].next)
         i = data[i].next;
-    data[i].next = pos;
-    i = neg;
+    data[i].next = pos;			
 
-    // find all intersection
-    float inter_x[6], inter_y[6], min_y = INFINITY, tmp2;
+    // find all intersection and x=0
+    float inter_x[12], inter_y[12], min_y = INFINITY, tmp2;
     j = -1;
     i = neg;
     while(-1 < data[i].next)
@@ -292,6 +294,25 @@ int main()
         inter_x[j] = tmp;
         inter_y[j] = tmp2;
     }
+	
+	// find the intersection of xl and xr
+	i = neg;
+    while(-1 < i)
+    {
+		if(xl != -INFINITY)
+		{
+			++j;
+			inter_x[j] = xl;
+			inter_y[j] = ((float)data[i].c - data[i].x * xl) / data[i].y;
+		}
+		if(xr != INFINITY)
+		{
+			++j;
+			inter_x[j] = xr;
+			inter_y[j] = ((float)data[i].c - data[i].x * xr) / data[i].y;
+		}		
+        i = data[i].next;
+    }
 
     // renew the lowest Y_value
     i=0;
@@ -304,7 +325,7 @@ int main()
                 goto out;
             k = data[k].next;
         }
-        if(inter_y[i] < min_y)
+        if(inter_y[i] < min_y && inter_x[i] >= xl && inter_x[i] <= xr)
             min_y = inter_y[i];
 out:
         ++i;
@@ -314,9 +335,8 @@ out:
     else
 	{
 		i = neg;
-		while(-1 < data[i].next)
+		while(-1 < i)
 		{
-			++j;
 			inter_y[0] = min_y - 10;
 			inter_x[0] = ((float)data[i].c - data[i].y*inter_y[0]) / data[i].x;
 			k = neg;
@@ -326,8 +346,11 @@ out:
 					goto out2;
 				k = data[k].next;
 			}
-			printf("-INF\n");
-			return 0;
+			if(inter_x[0] >= xl && inter_x[0] <= xr)
+			{
+				printf("-INF\n");
+				return 0;
+			}
 out2:
 			i = data[i].next;
 		}
