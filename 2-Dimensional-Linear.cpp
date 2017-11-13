@@ -78,6 +78,7 @@ int main()
     }
 
     // split the data into positive and negative
+	float xl = -INFINITY, xr = INFINITY;
     for(i=0; i<line; ++i)
     {
         if(0 > data[i].y)
@@ -88,7 +89,7 @@ int main()
                 data[k].next = i;
             k = i;
         }
-        else
+        else if(0 < data[i].y)
         {
             if(0 > pos)
                 pos = i;
@@ -96,9 +97,15 @@ int main()
                 data[j].next = i;
             j = i;
         }
+		else
+		{
+			if(0 < data[i].x && data[i].x < xr)
+				xr = data[i].x;
+			else if(data[i].x > xl)
+				xl = data[i].c * -1;
+		}
     }
-    // start Megiddo Algorithm, prune the line into 3
-    float xl = -INFINITY, xr = INFINITY;
+    // start Megiddo Algorithm, prune the line into 3    
     while(3 < line)
     {
         // remove the unnecessary line
@@ -252,12 +259,6 @@ int main()
                 printf("NA\n");
         }
     }
-    // when line is 3, process it directly
-    if(-INFINITY == xl || INFINITY == xr)
-    {
-        printf("-INF\n");
-        return 0;
-    }
     // concat all line in neg array
     i = neg;
     while(-1 < i && -1 < data[i].next)
@@ -309,8 +310,29 @@ out:
         ++i;
     }
     if(INFINITY == min_y)
-        printf("NA\n");
+		printf("NA\n");  
     else
-        printf("%d\n", QuickFist(min_y));
+	{
+		i = neg;
+		while(-1 < data[i].next)
+		{
+			++j;
+			inter_y[0] = min_y - 10;
+			inter_x[0] = ((float)data[i].c - data[i].y*inter_y[0]) / data[i].x;
+			k = neg;
+			while(-1 < k)
+			{
+				if(QuickFist(inter_x[0] * data[k].x + inter_y[0] * data[k].y) > data[k].c)
+					goto out2;
+				k = data[k].next;
+			}
+			printf("-INF\n");
+			return 0;
+out2:
+			i = data[i].next;
+		}
+		printf("%d\n", QuickFist(min_y));
+	}
+    
     return 0;
 }
