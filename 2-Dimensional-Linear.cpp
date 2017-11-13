@@ -250,7 +250,10 @@ int main()
                     xl = tmp;
             }
             else
-                printf("-INF\n");
+			{
+				printf("-INF\n");
+				return 0;
+			}                
         }
         else
         {
@@ -259,7 +262,10 @@ int main()
             else if((alpha_m1 < alpha_m2 ? alpha_m1 : alpha_m2) > (belta_m1 > belta_m2 ? belta_m1 : belta_m2))
                 xr = tmp;
             else
-                printf("NA\n");
+			{
+				printf("NA\n");
+				return 0;
+			}                
         }
     }
     // concat all line in neg array
