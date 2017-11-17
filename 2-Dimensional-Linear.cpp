@@ -76,6 +76,7 @@ int main()
         scanf("%d", &data[i].c);
         data[i].next = -1;
     }
+	
 
     // split the data into positive and negative
 	float xl = -INFINITY, xr = INFINITY;
@@ -202,6 +203,9 @@ int main()
             tmp -= 0.5;
         if(tmp == xl)
             tmp += 0.5;
+		
+		if(xr - xl == 0.5)
+			break;
 
         // find the intersection in median
         float alpha = -INFINITY, belta = INFINITY, alpha_m1, alpha_m2, belta_m1, belta_m2, tmp2;
@@ -272,10 +276,11 @@ int main()
     i = neg;
     while(-1 < i && -1 < data[i].next)
         i = data[i].next;
-    data[i].next = pos;			
+    data[i].next = pos;		
+	
 
     // find all intersection and x=0
-    float inter_x[12], inter_y[12], min_y = INFINITY, tmp2;
+    float inter_x[100], inter_y[100], min_y = INFINITY, tmp2;
     j = -1;
     i = neg;
     while(-1 < data[i].next)
@@ -343,6 +348,8 @@ out:
 		i = neg;
 		while(-1 < i)
 		{
+			if(data[i].x == 0)
+				goto out2;
 			inter_y[0] = min_y - 10;
 			inter_x[0] = ((float)data[i].c - data[i].y*inter_y[0]) / data[i].x;
 			k = neg;
