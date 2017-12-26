@@ -51,7 +51,7 @@ int main()
         scanf("%d %d", &item[i].value, &item[i].weight);
 
     sort(item, item + n, for_sort);
-    knapsack(0,0,0);
+    knapsack(0, 0, 0);
     printf("%d\n", lb);
     return 0;
 }
