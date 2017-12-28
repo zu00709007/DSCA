@@ -2,7 +2,6 @@
 #include<limits.h>
 #include<algorithm>
 
-
 using namespace std;
 int point_num, dis = INT_MAX, index = -1;
 
@@ -12,31 +11,37 @@ struct Point
 };
 struct Point point[100000];
 struct Point tmp[100000];
-struct Point ans[100];
-
-bool sort_x(struct Point a, struct Point b)
+struct Ans
 {
-    if(a.x < b.x)
-        return true;
+    int x, y;
+};
+struct Ans ans[100000];
+
+inline bool sort_ans(struct Ans a, struct Ans b)
+{
     if(a.x == b.x && a.y < b.y)
         return true;
-    return false;
-
+    return a.x < b.x;
 }
 
-int square(int a)
+inline bool sort_x(struct Point a, struct Point b)
 {
-    return a * a;
+    return a.x < b.x;
 }
 
-bool sort_y(struct Point a, struct Point b)
+inline bool sort_y(struct Point a, struct Point b)
 {
     return a.y < b.y;
 }
 
+inline int square(int a)
+{
+    return a * a;
+}
+
 void closest_pair(int left, int right)
 {
-    if (left >= right)
+    if(left >= right)
         return;
 
     int median = left + right >> 1;
@@ -61,10 +66,8 @@ void closest_pair(int left, int right)
         {
             int t = square(tmp[i].x - tmp[i+j].x) + square(tmp[i].y - tmp[i+j].y);
             if(t <= dis)
-            {
                 if(t == dis)
                 {
-                    //++index;
                     if(tmp[i].index < 0 && tmp[i+j].index > 0)
                     {
                         ++index;
@@ -103,7 +106,6 @@ void closest_pair(int left, int right)
                         ans[index].x ^= ans[index].y;
                     }
                 }
-            }
         }
 }
 
@@ -119,7 +121,7 @@ int main()
     closest_pair(0, point_num - 1);
     printf("%d %d\n", dis, index + 1);
 
-    sort(ans, ans + index + 1, sort_x);
+    sort(ans, ans + index + 1, sort_ans);
     for(int i=0; i<=index; ++i)
         printf("%d %d\n", ans[i].x, ans[i].y);
 
