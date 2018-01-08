@@ -3,7 +3,8 @@
 #include<algorithm>
 
 using namespace std;
-int point_num, dis = INT_MAX, index = -1;
+int point_num, index = -1;
+long long dis = LONG_LONG_MAX;
 
 struct Point
 {
@@ -33,9 +34,9 @@ inline bool sort_y_coordinate(struct Point a, struct Point b)
     return a.y < b.y;
 }
 
-inline int square(int a)
+long long square(int a)
 {
-    return a * a;
+    return (long long)a * a;
 }
 
 void closest_pair(int point_num, struct Point point[])
@@ -43,7 +44,8 @@ void closest_pair(int point_num, struct Point point[])
     if(0 == point_num)
         return;
 
-    int i, j, k, interval = 1, median_x, median = point_num >> 1;
+    int i, j, interval = 1, median_x, median = point_num >> 1;
+    long long k;
     struct Point tmp[point_num+1], subleft[median+1], subright[point_num-median];
 
     //find the median of x coordinate
@@ -82,7 +84,7 @@ void closest_pair(int point_num, struct Point point[])
     //merge the point in the distance
     interval = 0;
     for(i=0; i<=point_num; ++i)
-        if(abs(median_x - point[i].x) < dis)
+        if(square(median_x - point[i].x) <= dis)
             tmp[interval++] = point[i];
 
     //find the most 5 point in the distance
@@ -148,7 +150,7 @@ int main()
 
     //start divide and conquer
     closest_pair(point_num - 1, point);
-    printf("%d %d\n", dis, index + 1);
+    printf("%lld %d\n", dis, index + 1);
 
     //sort the answer
     sort(answer, answer + index + 1, sort_ans);
